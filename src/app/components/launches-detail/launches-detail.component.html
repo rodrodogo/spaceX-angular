@@ -1,0 +1,75 @@
+<div class="main-container container">
+  <div class="header-box">
+    <button class="material-icons button-round" routerLink="">
+      arrow_back
+    </button>
+    <div class="title-box">
+      <div>
+        <h1>{{ launch.mission_name }}</h1>
+        <span
+          class="chip-box-ok"
+          *ngIf="launch.launch_success; else failChipTemplate"
+          >Successful launch</span
+        >
+        <ng-template #failChipTemplate>
+          <span class="chip-box-fail">Failed launch</span>
+        </ng-template>
+      </div>
+      <h1>
+        <span class="material-icons"> event </span>{{ launch.launch_year }}
+      </h1>
+    </div>
+  </div>
+
+  <hr />
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="col box box-margin-bottom">
+          <div class="embed-responsive embed-responsive-16by9">
+            <iframe
+              [src]="videoUrl | safe"
+              class="embed-responsive-item"
+              allowfullscreen
+            >
+            </iframe>
+          </div>
+        </div>
+        <div class="col box box-margin-bottom">
+          <h3>Details:</h3>
+          <p>{{ launch.details }}</p>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="col box side-box">
+          <div class="row">
+            <h3 class="">
+              {{ launch.rocket?.rocket_name }}
+            </h3>
+          </div>
+          <div class="row">
+            <img
+              [src]="
+                launch.links && launch.links.mission_patch_small != null
+                  ? launch.links.mission_patch_small
+                  : imageNotFoundSrc
+              "
+              alt="asd"
+              class="card-block__patch-max-lenght"
+            />
+          </div>
+          <br />
+          <div class="row">
+            <p class="col side-box__text-bold">Launch Date</p>
+            <p class="col">{{ launch.launch_date_utc | date }}</p>
+          </div>
+          <div class="row">
+            <p class="col side-box__text-bold">Rocket type</p>
+            <p class="col">{{ launch.rocket?.rocket_type }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+</div>

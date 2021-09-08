@@ -1,0 +1,29 @@
+.title-block {
+  display: flex;
+  justify-content: center;
+}
+.card-container {
+  margin: 20px 10px 0px 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card-block {  
+  max-width: 256px;
+  margin: 0px 5px 5px 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.card-block__patch-max-lenght {
+  max-width: 256px;
+  max-height: 256px;
+}
+
+.card-block__title-card {
+    text-align: center;
+}

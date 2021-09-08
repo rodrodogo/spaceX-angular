@@ -1,0 +1,70 @@
+.header-box {
+  padding: 10px 10px 0px 10px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.button-round {
+  border-radius: 100%;
+  height: 1.5em;
+  width: 1.5em;
+  background-color: white;
+  border-style: hidden;
+  box-shadow: 0px 1px gray;
+}
+
+.title-box {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+%chip-box {
+  border-radius: 15px;
+  padding: 5px;
+}
+
+.chip-box-ok {
+  @extend %chip-box;
+  background-color: palegreen;
+  color: limegreen;
+}
+
+.chip-box-fail {
+  @extend %chip-box;
+  background-color: tomato;
+  color: firebrick;
+}
+
+
+.box{
+    background-color: white;
+    border-radius: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.box-margin-bottom {
+    margin-bottom: 15px;
+}
+
+.side-box{
+  padding: 15px 0px 15px 0px;
+  text-align: center;
+}
+
+.side-box div {
+  padding-bottom: 15px;
+}
+
+.side-box__text-bold {
+  font-weight: bold;
+}
+
+.box__img-max-lenght{
+  max-width: 256px;
+  max-height: 256px;
+}
+

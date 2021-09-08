@@ -1,0 +1,29 @@
+<div class="main-container container">
+  <div class="title-block">
+    <h1>List of Launches</h1>
+  </div>
+  <hr />
+  <div class="card-container">
+    <div
+      *ngFor="let launch of listLaunch | async"
+      routerLink="/detail/{{ launch.flight_number }}"
+      class="card-block"
+    >
+      <img
+        [src]="
+          launch.links && launch.links.mission_patch_small != null
+            ? launch.links.mission_patch_small
+            : imageNotFoundSrc
+        "
+        alt="asd"
+        class="card-block__patch-max-lenght"
+      />
+
+      <h3 class="card-block__title-card">
+        {{ launch.mission_name }}
+      </h3>
+    </div>
+  </div>
+  <br>
+</div>
+
