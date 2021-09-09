@@ -1,9 +1,10 @@
-// import { createSelector } from '@ngrx/store';
-// import { Launch } from '../models/launch.model';
-// import { AppState } from './app.state';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { Launch } from '../models/launch.model';
 
-// export const selectLaunches = createSelector(
-//   (state: AppState) => state.launches,
-//   (launches: Array<Launch>) => launches
-// );
+export const selectLaunchesFeature =
+createFeatureSelector< Launch[]>('launches');
 
+export const selectLaunches = createSelector(
+  selectLaunchesFeature,
+  (state: Launch[]) => state
+);

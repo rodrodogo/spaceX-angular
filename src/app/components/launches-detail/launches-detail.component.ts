@@ -1,10 +1,11 @@
 import { Component, OnInit, SecurityContext } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Launch } from 'src/app/models/launch.model';
+import { selectLaunches } from 'src/app/store/launches.selectors';
 
 @Component({
   selector: 'app-launches-detail',
@@ -22,7 +23,7 @@ export class LaunchesDetailComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private store: Store<{ launches: Launch[] }>,
+    private store: Store,
     private router: Router
   ) {
     this.flightNumber = Number(
@@ -35,15 +36,21 @@ export class LaunchesDetailComponent implements OnInit {
   ngOnInit(): void {}
 
   filterLaunches(): void {
-    this.launches = this.store
-      .select('launches')
-      .pipe(
-        map((launches: Launch[]) =>
-          launches.find(
-            (element) => element.flight_number === this.flightNumber
-          )
-        )
-      );
+    // this.launches = this.store
+    //   .select('launches')
+    //   .pipe(
+    //     map((launches: Launch[]) =>
+    //       launches.find(
+    //         (element) => element.flight_number === this.flightNumber
+    //       )
+    //     )
+    //   );
+    this.launches = this.store.pipe(
+      select(selectLaunches),
+      map((launches: Launch[]) =>
+        launches.find((element) => element.flight_number === this.flightNumber)
+      )
+    );
   }
 
   getLaunch(): void {

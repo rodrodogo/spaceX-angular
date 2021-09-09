@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Launch } from 'src/app/models/launch.model';
 import { LaunchesService } from 'src/app/services/launches.service';
 import { AddLaunchAction } from 'src/app/store/launches.actions';
+import { selectLaunches } from 'src/app/store/launches.selectors';
 
 @Component({
   selector: 'app-launches-list',
@@ -17,14 +18,15 @@ export class LaunchesListComponent implements OnInit {
 
   constructor(
     private launchesService: LaunchesService,
-    private store: Store<{ launches: Launch[] }>
+    private store: Store
   ) {
-    this.listLaunch = this.store.select('launches');
+    // this.listLaunch = this.store.select('launches');
+    this.listLaunch = this.store.pipe(select(selectLaunches));
   }
 
   ngOnInit(): void {
     this.listLaunch.subscribe((launches: Launch[]) => {
-      if (launches.length === 0) {
+      if (!launches || launches.length === 0) {
         this.storeLaunches();
       }
     });

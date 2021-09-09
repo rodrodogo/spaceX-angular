@@ -132,16 +132,17 @@ describe('LaunchesListComponent', () => {
   });
 
   it('storeLaunches should store a new launch',async () => {
+
     spyOn(launchesService, 'getLaunches').and.returnValue(of(luanchesMock));
     component.storeLaunches();
-    console.log(component.listLaunch);
-    component.listLaunch.subscribe((launches: Launch[]) => {
-      console.log(launches);
-    })
 
-    component.storeLaunches();
-    component.storeLaunches();
-    component.storeLaunches();
+
+    // component.listLaunch.subscribe((launches: Launch[]) => {
+    // })
+
+    // component.storeLaunches();
+    // component.storeLaunches();
+    // component.storeLaunches();
     
   });
 });
