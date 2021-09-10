@@ -4,7 +4,7 @@ export interface Launch {
   mission_id?: string[];
   launch_year?: number;
   launch_date_unix?: number;
-  launch_date_utc?: Date;
+  launch_date_utc?: string;
   launch_date_local?: Date;
   is_tentative?: boolean;
   tentative_max_precision?: string;

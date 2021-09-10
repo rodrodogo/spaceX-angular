@@ -9,13 +9,16 @@ import { LaunchesDetailComponent } from './components/launches-detail/launches-d
 import { StoreModule } from '@ngrx/store';
 import { reducer } from './store/launches.reducer';
 import { SafePipe } from './pipes/safe.pipe';
+import { LaunchesEditComponent } from './components/launches-edit/launches-edit.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     LaunchesListComponent,
     LaunchesDetailComponent,
-    SafePipe
+    SafePipe,
+    LaunchesEditComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +26,8 @@ import { SafePipe } from './pipes/safe.pipe';
     HttpClientModule,
     StoreModule.forRoot({
       launches: reducer
-    })
+    }),
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

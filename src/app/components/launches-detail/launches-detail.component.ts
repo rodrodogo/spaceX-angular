@@ -13,7 +13,7 @@ import { selectLaunches } from 'src/app/store/launches.selectors';
   styleUrls: ['./launches-detail.component.scss'],
 })
 export class LaunchesDetailComponent implements OnInit {
-  private flightNumber = 0;
+  public flightNumber = 0;
   public launches: Observable<Launch | undefined> | undefined;
   public launch: Launch = {};
   public videoUrl = '';
