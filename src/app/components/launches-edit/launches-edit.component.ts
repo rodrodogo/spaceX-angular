@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Launch } from 'src/app/models/launch.model';
 import { EditLaunchAction } from 'src/app/store/launches.actions';
@@ -12,11 +13,12 @@ import { selectLaunches } from 'src/app/store/launches.selectors';
   templateUrl: './launches-edit.component.html',
   styleUrls: ['./launches-edit.component.scss'],
 })
-export class LaunchesEditComponent implements OnInit {
+export class LaunchesEditComponent implements OnInit, OnDestroy {
   @Input() flightNumber = 0;
 
   public formLaunchEdit!: FormGroup;
   public launches: Observable<Launch | undefined> | undefined;
+  public launchesSubs: Subscription | undefined;
   public launch: Launch = {};
 
   constructor(private formBuilder: FormBuilder, private store: Store) {}
@@ -27,35 +29,42 @@ export class LaunchesEditComponent implements OnInit {
     this.getLaunch();
   }
 
+  ngOnDestroy(): void {
+    if (this.launchesSubs) {
+      this.launchesSubs.unsubscribe();
+    }
+  }
+
   public updateLaunch(): void {
+    const newLaunch = this.generateNewLaunch();
+    this.store.dispatch(EditLaunchAction({ newLaunch }));
+  }
+
+  private generateNewLaunch(): Launch {
     const control = this.formLaunchEdit.controls;
-    const stringDate = control.launchDateUtc.value;
-    const arrayDate = stringDate.split('-');
-    const newDate = new Date(Number(arrayDate[0]), Number(arrayDate[1]) - 1, Number(arrayDate[2]));
+    const newYear = moment(control.launch_date_utc.value).format('YYYY');
+
     const newLaunch: Launch = {
       ...this.launch,
-      mission_name: control.missionName.value,
-      launch_success: control.launchSuccess.value,
-      details: control.details.value,
+      ...this.formLaunchEdit.value,
       rocket: {
         ...this.launch.rocket,
-        rocket_name: control.rocketName.value,
-        rocket_type: control.rocketType.value,
+        rocket_name: control.rocket_name.value,
+        rocket_type: control.rocket_type.value,
       },
-      launch_date_utc: newDate.toISOString(),
-      launch_year: newDate.getFullYear()
+      launch_year: newYear,
     };
-    this.store.dispatch(EditLaunchAction({ newLaunch }));
+    return newLaunch;
   }
 
   private createForm(): void {
     this.formLaunchEdit = this.formBuilder.group({
-      missionName: [, [Validators.required]],
-      launchSuccess: [, [Validators.required]],
+      mission_name: [, [Validators.required]],
+      launch_success: [, [Validators.required]],
       details: [, [Validators.required]],
-      rocketName: [, [Validators.required]],
-      launchDateUtc: [, [Validators.required]],
-      rocketType: [, [Validators.required]],
+      rocket_name: [, [Validators.required]],
+      launch_date_utc: [, [Validators.required]],
+      rocket_type: [, [Validators.required]],
     });
   }
 
@@ -69,27 +78,25 @@ export class LaunchesEditComponent implements OnInit {
   }
 
   private getLaunch(): void {
-    this.launches?.subscribe((elemnt: Launch | undefined) => {
-      const control = this.formLaunchEdit.controls;
-      if (elemnt) {
-        this.launch = elemnt;
-        control.missionName.setValue(elemnt.mission_name);
-        control.launchSuccess.setValue(elemnt.launch_success);
-        control.details.setValue(elemnt.details);
-        control.rocketName.setValue(elemnt.rocket?.rocket_name);
-        control.rocketType.setValue(elemnt.rocket?.rocket_type);
-        if (elemnt.launch_date_utc) {
-          const launchDate = new Date(elemnt.launch_date_utc);
-          const month = launchDate.getMonth() + 1;
-          const dateString =
-            launchDate.getFullYear().toString() +
-            '-' +
-            month.toString().padStart(2, '0') +
-            '-' +
-            launchDate.getUTCDate().toString().padStart(2, '0');
-          control.launchDateUtc.setValue(dateString);
+    this.launchesSubs = this.launches?.subscribe(
+      (elemnt: Launch | undefined) => {
+        if (elemnt) {
+
+          const control = this.formLaunchEdit.controls;
+
+          this.launch = elemnt;
+          control.mission_name.setValue(elemnt.mission_name);
+          control.launch_success.setValue(elemnt.launch_success);
+          control.details.setValue(elemnt.details);
+          control.rocket_name.setValue(elemnt.rocket?.rocket_name);
+          control.rocket_type.setValue(elemnt.rocket?.rocket_type);
+
+          if (elemnt.launch_date_utc) {
+            const newYear = moment(elemnt.launch_date_utc).format('YYYY-MM-DD');
+            control.launch_date_utc.setValue(newYear);
+          }
         }
       }
-    });
+    );
   }
 }

@@ -1,8 +1,8 @@
-import { Component, OnInit, SecurityContext } from '@angular/core';
+import { Component, OnDestroy, OnInit, SecurityContext } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Launch } from 'src/app/models/launch.model';
 import { selectLaunches } from 'src/app/store/launches.selectors';
@@ -12,9 +12,10 @@ import { selectLaunches } from 'src/app/store/launches.selectors';
   templateUrl: './launches-detail.component.html',
   styleUrls: ['./launches-detail.component.scss'],
 })
-export class LaunchesDetailComponent implements OnInit {
+export class LaunchesDetailComponent implements OnInit, OnDestroy {
   public flightNumber = 0;
   public launches: Observable<Launch | undefined> | undefined;
+  public launchesSubs: Subscription | undefined;
   public launch: Launch = {};
   public videoUrl = '';
   public readonly YOUTUBE_PATH = 'https://www.youtube.com/embed/';
@@ -35,16 +36,13 @@ export class LaunchesDetailComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  ngOnDestroy(): void {
+    if (this.launchesSubs) {
+      this.launchesSubs.unsubscribe();
+    }
+  }
+
   filterLaunches(): void {
-    // this.launches = this.store
-    //   .select('launches')
-    //   .pipe(
-    //     map((launches: Launch[]) =>
-    //       launches.find(
-    //         (element) => element.flight_number === this.flightNumber
-    //       )
-    //     )
-    //   );
     this.launches = this.store.pipe(
       select(selectLaunches),
       map((launches: Launch[]) =>
@@ -54,7 +52,8 @@ export class LaunchesDetailComponent implements OnInit {
   }
 
   getLaunch(): void {
-    this.launches?.subscribe((elemnt: Launch | undefined) => {
+    this.launchesSubs = this.launches?.subscribe((elemnt: Launch | undefined) => {
+      
       if (elemnt) {
         this.launch = elemnt;
         if (this.launch.links && this.launch.links.youtube_id) {

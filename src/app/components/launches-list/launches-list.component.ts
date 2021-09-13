@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Launch } from 'src/app/models/launch.model';
 import { LaunchesService } from 'src/app/services/launches.service';
 import { AddLaunchAction } from 'src/app/store/launches.actions';
@@ -13,6 +13,7 @@ import { selectLaunches } from 'src/app/store/launches.selectors';
 })
 export class LaunchesListComponent implements OnInit {
   public listLaunch: Observable<Launch[]>;
+  public launchesSubs: Subscription | undefined;
   public imageNotFoundSrc =
     'https://www.publicdomainpictures.net/pictures/280000/velka/not-found-image-15383864787lu.jpg';
 
@@ -20,7 +21,6 @@ export class LaunchesListComponent implements OnInit {
     private launchesService: LaunchesService,
     private store: Store
   ) {
-    // this.listLaunch = this.store.select('launches');
     this.listLaunch = this.store.pipe(select(selectLaunches));
   }
 
@@ -32,8 +32,14 @@ export class LaunchesListComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    if (this.launchesSubs) {
+      this.launchesSubs.unsubscribe();
+    }
+  }
+
   storeLaunches(): void {
-    this.launchesService.getLaunches().subscribe({
+    this.launchesSubs = this.launchesService.getLaunches().subscribe({
       next: (data: Launch[]) => {
         data.forEach((launch: Launch) => this.add(launch));
       },
