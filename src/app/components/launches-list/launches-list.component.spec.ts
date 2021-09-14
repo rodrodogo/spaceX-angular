@@ -50,7 +50,7 @@ describe('LaunchesListComponent', () => {
     
   });
 
-  it('should return a object ', () => {
+  xit('should return a object ', () => {
     
     const expected = cold('(a|)', { a: launchesMock });
     store.setState({ launchesMock });

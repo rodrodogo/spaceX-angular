@@ -40,7 +40,7 @@ export class LaunchesEditComponent implements OnInit, OnDestroy {
     this.store.dispatch(EditLaunchAction({ newLaunch }));
   }
 
-  private generateNewLaunch(): Launch {
+  public generateNewLaunch(): Launch {
     const control = this.formLaunchEdit.controls;
     const newYear = moment(control.launch_date_utc.value).format('YYYY');
 
@@ -81,22 +81,24 @@ export class LaunchesEditComponent implements OnInit, OnDestroy {
     this.launchesSubs = this.launches?.subscribe(
       (elemnt: Launch | undefined) => {
         if (elemnt) {
-
-          const control = this.formLaunchEdit.controls;
-
-          this.launch = elemnt;
-          control.mission_name.setValue(elemnt.mission_name);
-          control.launch_success.setValue(elemnt.launch_success);
-          control.details.setValue(elemnt.details);
-          control.rocket_name.setValue(elemnt.rocket?.rocket_name);
-          control.rocket_type.setValue(elemnt.rocket?.rocket_type);
-
-          if (elemnt.launch_date_utc) {
-            const newYear = moment(elemnt.launch_date_utc).format('YYYY-MM-DD');
-            control.launch_date_utc.setValue(newYear);
-          }
+          this.loadLaunchForm(elemnt);
         }
       }
     );
+  }
+
+  public loadLaunchForm(elemnt: Launch): void {
+    this.launch = elemnt;
+    const control = this.formLaunchEdit.controls;
+    control.mission_name.setValue(elemnt.mission_name);
+    control.launch_success.setValue(elemnt.launch_success);
+    control.details.setValue(elemnt.details);
+    control.rocket_name.setValue(elemnt.rocket?.rocket_name);
+    control.rocket_type.setValue(elemnt.rocket?.rocket_type);
+
+    if (elemnt.launch_date_utc) {
+      const newYear = moment(elemnt.launch_date_utc).format('YYYY-MM-DD');
+      control.launch_date_utc.setValue(newYear);
+    }
   }
 }
