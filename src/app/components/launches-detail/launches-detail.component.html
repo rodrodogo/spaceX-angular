@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="card-box side-box-right">
-      <h3 class="">
+      <h3 class="side-box-right--margin">
         {{ launch.rocket?.rocket_name }}
       </h3>
       <img
@@ -49,19 +49,19 @@
             : imageNotFoundSrc
         "
         alt="asd"
-        class="box__img-max-lenght"
+        class="box__img-max-lenght side-box-right--margin"
       />
       <div class="side-box-right__details">
         <p class="side-box__text-bold">Launch Date</p>
         <p>{{ launch.launch_date_utc | date }}</p>
       </div>
-      <div class="side-box-right__details">
+      <div class="side-box-right__details side-box-right--margin">
         <p class="side-box__text-bold">Rocket type</p>
         <p>{{ launch.rocket?.rocket_type }}</p>
       </div>
       <button
         type="button"
-        class="btn btn-primary button-size"
+        class="btn btn-primary button-size side-box-right--margin"
         data-bs-toggle="modal"
         data-bs-target="#launchModalEdit"
       >
@@ -71,7 +71,6 @@
   </div>
   <br />
 
-  <!-- Modal -->
   <div
     class="modal fade"
     id="launchModalEdit"
