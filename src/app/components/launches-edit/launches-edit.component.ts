@@ -1,12 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { select, Store } from '@ngrx/store';
 import * as moment from 'moment';
 import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Launch } from 'src/app/models/launch.model';
-import { EditLaunchAction } from 'src/app/store/launches.actions';
-import { selectLaunches } from 'src/app/store/launches.selectors';
+import { StoreService } from 'src/app/services/store-service.service';
 
 @Component({
   selector: 'app-launches-edit',
@@ -17,15 +14,18 @@ export class LaunchesEditComponent implements OnInit, OnDestroy {
   @Input() flightNumber = 0;
 
   public formLaunchEdit!: FormGroup;
-  public launches: Observable<Launch | undefined> | undefined;
+  public launches!: Observable<Launch>;
   public launchesSubs: Subscription | undefined;
   public launch: Launch = {};
+  public launchLoaded = false;
 
-  constructor(private formBuilder: FormBuilder, private store: Store) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private storeService: StoreService
+  ) {}
 
   ngOnInit(): void {
-    this.createForm();
-    this.filterLaunches();
+    this.selectLaunch();
     this.getLaunch();
   }
 
@@ -37,7 +37,7 @@ export class LaunchesEditComponent implements OnInit, OnDestroy {
 
   public updateLaunch(): void {
     const newLaunch = this.generateNewLaunch();
-    this.store.dispatch(EditLaunchAction({ newLaunch }));
+    this.storeService.editLaunch(newLaunch);
   }
 
   public generateNewLaunch(): Launch {
@@ -57,24 +57,8 @@ export class LaunchesEditComponent implements OnInit, OnDestroy {
     return newLaunch;
   }
 
-  private createForm(): void {
-    this.formLaunchEdit = this.formBuilder.group({
-      mission_name: [, [Validators.required]],
-      launch_success: [, [Validators.required]],
-      details: [, [Validators.required]],
-      rocket_name: [, [Validators.required]],
-      launch_date_utc: [, [Validators.required]],
-      rocket_type: [, [Validators.required]],
-    });
-  }
-
-  private filterLaunches(): void {
-    this.launches = this.store.pipe(
-      select(selectLaunches),
-      map((launches: Launch[]) =>
-        launches.find((element) => element.flight_number === this.flightNumber)
-      )
-    );
+  private selectLaunch(): void {
+    this.launches = this.storeService.selectLaunch(this.flightNumber);
   }
 
   private getLaunch(): void {
@@ -89,16 +73,21 @@ export class LaunchesEditComponent implements OnInit, OnDestroy {
 
   public loadLaunchForm(elemnt: Launch): void {
     this.launch = elemnt;
-    const control = this.formLaunchEdit.controls;
-    control.mission_name.setValue(elemnt.mission_name);
-    control.launch_success.setValue(elemnt.launch_success);
-    control.details.setValue(elemnt.details);
-    control.rocket_name.setValue(elemnt.rocket?.rocket_name);
-    control.rocket_type.setValue(elemnt.rocket?.rocket_type);
-
+    let newYear;
     if (elemnt.launch_date_utc) {
-      const newYear = moment(elemnt.launch_date_utc).format('YYYY-MM-DD');
-      control.launch_date_utc.setValue(newYear);
+      newYear = moment(elemnt.launch_date_utc).format('YYYY-MM-DD');
+    } else {
+      newYear = moment().format('YYYY-MM-DD');
     }
+    this.formLaunchEdit = this.formBuilder.group({
+      mission_name: [elemnt.mission_name, [Validators.required]],
+      launch_success: [elemnt.launch_success, [Validators.required]],
+      details: [elemnt.details, [Validators.required]],
+      rocket_name: [elemnt.rocket?.rocket_name, [Validators.required]],
+      launch_date_utc: [newYear, [Validators.required]],
+      rocket_type: [elemnt.rocket?.rocket_type, [Validators.required]],
+    });
+
+    this.launchLoaded = true;
   }
 }

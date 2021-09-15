@@ -20,5 +20,8 @@ export const reducer = createReducer(
     const updatedLaunches = [...state];
     updatedLaunches[index] = updatedLaunch;
     return updatedLaunches;
-  })
+  }),
+  on(Launchs.LoadLaunchesSuccess, (state, {launches}) => {
+    return [...state, ...launches];
+  }),
 );

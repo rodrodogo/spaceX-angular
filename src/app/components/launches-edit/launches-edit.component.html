@@ -10,7 +10,7 @@
       ></button>
     </div>
     <div class="modal-body">
-      <form [formGroup]="formLaunchEdit" autocomplete="off">
+      <form [formGroup]="formLaunchEdit" autocomplete="off" *ngIf="launchLoaded">
         <div class="mb-3">
           <label for="inputMission" class="form-label">Mission name</label>
           <input

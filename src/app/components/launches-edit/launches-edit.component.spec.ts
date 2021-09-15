@@ -27,24 +27,6 @@ describe('LaunchesEditComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create a new Launch with the info of the form', () => {
-    const control = component.formLaunchEdit.controls;
-    control.mission_name.setValue('mision edit');
-    control.launch_success.setValue(false);
-    control.details.setValue('details');
-    control.rocket_name.setValue('rocket launch');
-    control.rocket_type.setValue('C');
-    control.launch_date_utc.setValue('2012-11-10');
-    const newLaunch = component.generateNewLaunch();
-
-    expect(newLaunch.mission_name).toEqual('mision edit');
-    expect(newLaunch.launch_success).toEqual(false);
-    expect(newLaunch.details).toEqual('details');
-    expect(newLaunch.rocket?.rocket_name).toEqual('rocket launch');
-    expect(newLaunch.rocket?.rocket_type).toEqual('C');
-    expect(newLaunch.launch_date_utc).toEqual('2012-11-10');
-  });
-
   it('should load the launch in the form', () => {
     const launch: Launch = {
       mission_name: 'mision new',

@@ -16,7 +16,7 @@ export class LaunchesService {
 
 
   public getLaunches(): Observable<Launch[]> {
-    const URL = this.URL_API.concat(this.LAUNCEHS);
+    const URL = `${this.URL_API}${this.LAUNCEHS}`;
     return this.http.get<Launch[]>(URL);
   }
 

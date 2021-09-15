@@ -35,20 +35,6 @@ describe('LaunchesListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('storeLaunches should store a new launch',async () => {
-
-    spyOn(launchesService, 'getLaunches').and.returnValue(of(launchesMock));
-    component.storeLaunches();
-
-
-    // component.listLaunch.subscribe((launches: Launch[]) => {
-    // })
-
-    // component.storeLaunches();
-    // component.storeLaunches();
-    // component.storeLaunches();
-    
-  });
 
   xit('should return a object ', () => {
     
