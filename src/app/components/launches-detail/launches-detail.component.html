@@ -22,77 +22,63 @@
   </div>
 
   <hr />
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-8">
-        <div class="col box box-margin-bottom">
-          <div class="embed-responsive embed-responsive-16by9">
-            <iframe
-              [src]="videoUrl | safe"
-              class="embed-responsive-item"
-              allowfullscreen
-            >
-            </iframe>
-          </div>
-        </div>
-        <div class="col box box-margin-bottom">
-          <h3>Details:</h3>
-          <p>{{ launch.details }}</p>
-        </div>
+
+  <div class="detail-section">
+    <div class="side-box-left">
+      <div class="card-box video-box">
+        <iframe
+          [src]="videoUrl | safe"
+          class="video-box__iframe"
+          allowfullscreen
+        >
+        </iframe>
       </div>
-      <div class="col-sm-4">
-        <div class="col box side-box">
-          <div class="row">
-            <h3 class="">
-              {{ launch.rocket?.rocket_name }}
-            </h3>
-          </div>
-          <div class="row">
-            <img
-              [src]="
-                launch.links && launch.links.mission_patch_small != null
-                  ? launch.links.mission_patch_small
-                  : imageNotFoundSrc
-              "
-              alt="asd"
-              class="card-block__patch-max-lenght"
-            />
-          </div>
-          <br />
-          <div class="row">
-            <p class="col side-box__text-bold">Launch Date</p>
-            <p class="col">{{ launch.launch_date_utc | date }}</p>
-          </div>
-          <div class="row">
-            <p class="col side-box__text-bold">Rocket type</p>
-            <p class="col">{{ launch.rocket?.rocket_type }}</p>
-          </div>
-          <div class="row">
-            <div class="col">
-              <button
-                type="button"
-                class="btn btn-primary side-box__button-size"
-                data-bs-toggle="modal"
-                data-bs-target="#launchModalEdit"
-              >
-                Edit
-              </button>
-            </div>
-          </div>
-        </div>
+      <div class="card-box">
+        <h3>Details:</h3>
+        <p>{{ launch.details }}</p>
       </div>
+    </div>
+    <div class="card-box side-box-right">
+      <h3 class="">
+        {{ launch.rocket?.rocket_name }}
+      </h3>
+      <img
+        [src]="
+          launch.links && launch.links.mission_patch_small != null
+            ? launch.links.mission_patch_small
+            : imageNotFoundSrc
+        "
+        alt="asd"
+        class="box__img-max-lenght"
+      />
+      <div class="side-box-right__details">
+        <p class="side-box__text-bold">Launch Date</p>
+        <p>{{ launch.launch_date_utc | date }}</p>
+      </div>
+      <div class="side-box-right__details">
+        <p class="side-box__text-bold">Rocket type</p>
+        <p>{{ launch.rocket?.rocket_type }}</p>
+      </div>
+      <button
+        type="button"
+        class="btn btn-primary button-size"
+        data-bs-toggle="modal"
+        data-bs-target="#launchModalEdit"
+      >
+        Edit
+      </button>
     </div>
   </div>
   <br />
-</div>
 
-<!-- Modal -->
-<div
-  class="modal fade"
-  id="launchModalEdit"
-  tabindex="-1"
-  aria-labelledby="launchModalEditLabel"
-  aria-hidden="true"
->
-  <app-launches-edit [flightNumber] = "flightNumber"></app-launches-edit>
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="launchModalEdit"
+    tabindex="-1"
+    aria-labelledby="launchModalEditLabel"
+    aria-hidden="true"
+  >
+    <app-launches-edit [flightNumber]="flightNumber"></app-launches-edit>
+  </div>
 </div>

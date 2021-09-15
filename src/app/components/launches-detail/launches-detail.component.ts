@@ -1,11 +1,9 @@
-import { Component, OnDestroy, OnInit, SecurityContext } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { select, Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { get } from 'lodash';
 import { Launch } from 'src/app/models/launch.model';
-import { selectLaunches } from 'src/app/store/launches.selectors';
+import { StoreService } from 'src/app/services/store-service.service';
 
 @Component({
   selector: 'app-launches-detail',
@@ -24,7 +22,7 @@ export class LaunchesDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private store: Store,
+    private storeService: StoreService,
     private router: Router
   ) {
     this.flightNumber = Number(
@@ -43,27 +41,17 @@ export class LaunchesDetailComponent implements OnInit, OnDestroy {
   }
 
   filterLaunches(): void {
-    this.launches = this.store.pipe(
-      select(selectLaunches),
-      map((launches: Launch[]) =>
-        launches.find((element) => element.flight_number === this.flightNumber)
-      )
-    );
+    this.launches = this.storeService.selectLaunch(this.flightNumber);
   }
 
   getLaunch(): void {
-    this.launchesSubs = this.launches?.subscribe((elemnt: Launch | undefined) => {
-      
-      if (elemnt) {
-        this.launch = elemnt;
-        if (this.launch.links && this.launch.links.youtube_id) {
-          this.videoUrl = this.YOUTUBE_PATH.concat(
-            this.launch.links.youtube_id
-          );
+    this.launchesSubs = this.launches?.subscribe(
+      (elemnt: Launch | undefined) => {
+        this.videoUrl = this.YOUTUBE_PATH + get(elemnt, 'links.youtube_id');
+        if (elemnt?.flight_number) {
+          this.launch = elemnt;
         }
-      } else {
-        this.router.navigate(['']);
       }
-    });
+    );
   }
 }

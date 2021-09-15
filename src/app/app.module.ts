@@ -11,6 +11,8 @@ import { reducer } from './store/launches.reducer';
 import { SafePipe } from './pipes/safe.pipe';
 import { LaunchesEditComponent } from './components/launches-edit/launches-edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { EffectsModule } from '@ngrx/effects';
+import { LaunchesEffects } from './store/launches.effects';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     StoreModule.forRoot({
       launches: reducer
     }),
+    EffectsModule.forRoot([LaunchesEffects]),
     ReactiveFormsModule
   ],
   providers: [],
