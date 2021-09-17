@@ -100,7 +100,7 @@ export const launchesMock: Launch[] = [
     },
     {
       flight_number: 2,
-      mission_name: 'FalconSat',
+      mission_name: 'FalconSaturday',
       mission_id: [],
       upcoming: false,
       launch_year: 2006,

@@ -9,6 +9,17 @@ describe('LaunchesEditComponent', () => {
   let component: LaunchesEditComponent;
   let fixture: ComponentFixture<LaunchesEditComponent>;
   const initialState = {};
+  const launchOriginal: Launch = {
+    mission_name: 'mision new',
+    launch_success: false,
+    details: 'details new',
+    rocket: {
+      rocket_name: 'rocket launch',
+      rocket_type: 'C',
+    },
+    launch_date_utc: '2006-03-24T22:30:00.000Z',
+  };
+
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -27,8 +38,8 @@ describe('LaunchesEditComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load the launch in the form', () => {
-    const launch: Launch = {
+  describe('should load the launch in the form', () => {
+    const launchForm: Launch = {
       mission_name: 'mision new',
       launch_success: false,
       details: 'details new',
@@ -36,16 +47,43 @@ describe('LaunchesEditComponent', () => {
         rocket_name: 'rocket launch',
         rocket_type: 'C',
       },
-      launch_date_utc: '2012-11-10',
+      launch_date_utc: '2006-03-24',
     };
+    it('should convert date to format YYYY-MM-DD', () => {
 
-    component.loadLaunchForm(launch);
-    expect(component.formLaunchEdit.controls.mission_name.value).toEqual(launch.mission_name);
-    expect(component.formLaunchEdit.controls.launch_success.value).toEqual(launch.launch_success);
-    expect(component.formLaunchEdit.controls.details.value).toEqual(launch.details);
-    expect(component.formLaunchEdit.controls.rocket_name.value).toEqual(launch.rocket?.rocket_name);
-    expect(component.formLaunchEdit.controls.rocket_type.value).toEqual(launch.rocket?.rocket_type);
-    expect(component.formLaunchEdit.controls.launch_date_utc.value).toEqual(launch.launch_date_utc);
-    
+      component.loadLaunchForm(launchOriginal);
+
+      expect(component.formLaunchEdit.value.launch_date_utc).toEqual(launchForm.launch_date_utc);
+
+    });
+
+    it('should fill the form with launch object', () => {
+      component.loadLaunchForm(launchOriginal);
+      expect(component.formLaunchEdit.value).toEqual(launchForm);
+    });
+
+    it('should mark flag launchLoaded as true', () => {
+      component.loadLaunchForm(launchOriginal);
+      expect(component.launchLoaded).toBeTrue();
+    })
   });
+
+  it('should create a edited launch with property launch_year of type number', () =>{
+    component.loadLaunchForm(launchOriginal);
+    const launchEdited: Launch = {
+      mission_name: 'mision new',
+      launch_success: false,
+      details: 'details new',
+      rocket: {
+        rocket_name: 'rocket launch',
+        rocket_type: 'C',
+      },
+      launch_date_utc: '2006-03-24',
+      launch_year: 2006
+    };
+    const editedLaunch = component.generateNewLaunch();
+    expect(editedLaunch).toEqual(launchEdited);
+    
+  })
+
 });

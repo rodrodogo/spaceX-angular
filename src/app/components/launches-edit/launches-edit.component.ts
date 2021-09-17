@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { Observable, Subscription } from 'rxjs';
 import { Launch } from 'src/app/models/launch.model';
@@ -42,16 +42,11 @@ export class LaunchesEditComponent implements OnInit, OnDestroy {
 
   public generateNewLaunch(): Launch {
     const control = this.formLaunchEdit.controls;
-    const newYear = moment(control.launch_date_utc.value).format('YYYY');
+    const newYear = Number(moment(control.launch_date_utc.value).format('YYYY'));
 
     const newLaunch: Launch = {
       ...this.launch,
       ...this.formLaunchEdit.value,
-      rocket: {
-        ...this.launch.rocket,
-        rocket_name: control.rocket_name.value,
-        rocket_type: control.rocket_type.value,
-      },
       launch_year: newYear,
     };
     return newLaunch;
@@ -83,9 +78,11 @@ export class LaunchesEditComponent implements OnInit, OnDestroy {
       mission_name: [elemnt.mission_name, [Validators.required]],
       launch_success: [elemnt.launch_success, [Validators.required]],
       details: [elemnt.details, [Validators.required]],
-      rocket_name: [elemnt.rocket?.rocket_name, [Validators.required]],
+      rocket: new FormGroup({
+        rocket_name: new FormControl(elemnt.rocket?.rocket_name, [Validators.required]),
+        rocket_type: new FormControl(elemnt.rocket?.rocket_type, [Validators.required]),
+      }),
       launch_date_utc: [newYear, [Validators.required]],
-      rocket_type: [elemnt.rocket?.rocket_type, [Validators.required]],
     });
 
     this.launchLoaded = true;

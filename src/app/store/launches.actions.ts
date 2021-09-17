@@ -5,6 +5,7 @@ export const ADD_LAUNCH = '[Launch Component] Add';
 export const EDIT_LAUNCH = '[Launch Component] Edit';
 export const LOAD_LAUNCH = '[Launch Component] Load';
 export const LOAD_LAUNCHES_SUCCESS = '[Launch Component] Load Success';
+export const RESET_LAUNCHES = '[Launch Component] Reset'
 
 export const AddLaunchAction = createAction(
   ADD_LAUNCH,
@@ -19,4 +20,8 @@ export const EditLaunchAction = createAction(
 export const LoadLaunchesSuccess = createAction(
   LOAD_LAUNCHES_SUCCESS,
   props<{launches: Launch[]}>()
+);
+
+export const ResetLaunches = createAction(
+  RESET_LAUNCHES
 );

@@ -1,5 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { cold } from 'jasmine-marbles';
 
 import { LaunchesService } from './launches.service';
 
@@ -10,7 +11,7 @@ describe('LaunchesService', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule]
     });
-    service = TestBed.inject(LaunchesService);
+    service = TestBed.inject(LaunchesService);    
   });
 
   it('should be created', () => {

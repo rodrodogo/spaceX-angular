@@ -24,4 +24,7 @@ export const reducer = createReducer(
   on(Launchs.LoadLaunchesSuccess, (state, {launches}) => {
     return [...state, ...launches];
   }),
+  on(Launchs.ResetLaunches, (state) => {
+    return initialState;
+  }),
 );

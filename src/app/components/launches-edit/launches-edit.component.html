@@ -39,25 +39,27 @@
             formControlName="details"
           ></textarea>
         </div>
-
-        <div class="mb-3">
-          <label for="inputRocket" class="form-label">Rocket name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="inputRocket"
-            formControlName="rocket_name"
-          />
+        <div formGroupName="rocket">
+          <div class="mb-3">
+            <label for="inputRocket" class="form-label">Rocket name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputRocket"
+              formControlName="rocket_name"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="inputRocketType" class="form-label">Rocket type</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputRocketType"
+              formControlName="rocket_type"
+            />
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="inputRocketType" class="form-label">Rocket type</label>
-          <input
-            type="text"
-            class="form-control"
-            id="inputRocketType"
-            formControlName="rocket_type"
-          />
-        </div>
+        
 
         <div class="mb-3">
           <div class="form-switch">
